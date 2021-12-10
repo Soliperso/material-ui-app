@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Container,
   Paper,
@@ -11,7 +12,6 @@ import {
   FormLabel,
   FormControlLabel,
 } from '@mui/material';
-import { pink } from '@mui/material/colors';
 import { makeStyles } from '@mui/styles';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
 
@@ -21,7 +21,6 @@ const useStyles = makeStyles({
     marginTop: '20px',
   },
   container: {
-    backgroundColor: '#fafafa',
     minHeight: '100vh',
     marginTop: 40,
   },
@@ -35,12 +34,13 @@ const useStyles = makeStyles({
 
 const Create = () => {
   const classes = useStyles();
+  const navigate = useNavigate();
 
   const [title, setTitle] = useState('');
   const [details, setDetails] = useState('');
   const [titleError, setTitleError] = useState(false);
   const [detailsError, setDetailsError] = useState(false);
-  const [category, setCategory] = useState('');
+  const [category, setCategory] = useState('todos');
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,14 +48,16 @@ const Create = () => {
     setTitleError(false);
     setDetailsError(false);
 
-    if (title === '') setTitleError(true);
-    if (details === '') setDetailsError(true);
+    if (!title) setTitleError(true);
+    if (!details) setDetailsError(true);
 
-    if (title && details)
-      console.log(`
-      Title: ${title} 
-      Details: ${details}
-      Category: ${category}`);
+    if (title && details) {
+      fetch('http://localhost:8000/notes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, details, category }),
+      }).then(() => navigate('/'));
+    }
 
     setTitle('');
     setDetails('');
@@ -95,11 +97,15 @@ const Create = () => {
           />
 
           <FormControl className={classes.field} fullWidth>
-            <FormLabel>Note Category: </FormLabel>
+            <FormLabel component='legend'>Note Category</FormLabel>
             <RadioGroup row value={category} onChange={(e) => setCategory(e.target.value)}>
-              <FormControlLabel value='money' control={<Radio />} label='Money' />
-              <FormControlLabel value='todos' control={<Radio />} label='Todos' />
-              <FormControlLabel value='reminders' control={<Radio />} label='Reminders' />
+              <FormControlLabel value='money' control={<Radio size='small' />} label='Money' />
+              <FormControlLabel value='todos' control={<Radio size='small' />} label='Todos' />
+              <FormControlLabel
+                value='reminders'
+                control={<Radio size='small' />}
+                label='Reminders'
+              />
               <FormControlLabel value='work' control={<Radio size='small' />} label='Work' />
             </RadioGroup>
           </FormControl>
