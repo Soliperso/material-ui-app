@@ -13,7 +13,7 @@ const theme = createTheme({
     secondary: cyan,
   },
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: 'Quicksand, sans-serif',
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 500,

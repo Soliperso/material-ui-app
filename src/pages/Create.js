@@ -1,46 +1,62 @@
-import { Button, Container, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Container, TextField, Typography, Button } from '@mui/material';
 import SendOutlinedIcon from '@mui/icons-material/SendOutlined';
-import { makeStyles } from '@mui/styles';
 
-// Create custom CSS styles using makeStyles hook
-const useStyles = makeStyles({
-  btn: {
-    fontSize: 40,
-    backgroundColor: 'violet',
+const Create = () => {
+  const [title, setTitle] = useState('');
+  const [details, setDetails] = useState('');
+  const [titleError, setTitleError] = useState(false);
+  const [detailsError, setDetailsError] = useState(false);
 
-    '&:hover': {
-      backgroundColor: '#00ff00',
-    },
-  },
-  title: {
-    fontSize: 40,
-    textDecoration: 'underline',
-  },
-});
+  const handleSubmit = (e) => {
+    e.preventDefault();
 
-export default function Create() {
-  const classes = useStyles();
+    setTitleError(false);
+    setDetailsError(false);
+
+    if (title === '') setTitleError(true);
+    if (details === '') setDetailsError(true);
+
+    if (title && details) console.log(title, details);
+
+    setTitle('');
+    setDetails('');
+  };
 
   return (
     <Container>
-      <Typography
-        className={classes.title}
-        variant='h6'
-        color='textSecondary'
-        component='h2'
-        gutterBottom
-      >
+      <Typography variant='h6' mt={2} component='h2' color='textSecondary'>
         Create a New Note
       </Typography>
-      <Button
-        type='submit'
-        className={classes.btn}
-        variant='contained'
-        color='secondary'
-        endIcon={<SendOutlinedIcon />}
-      >
-        Submit
-      </Button>
+      <form noValidate autoComplete='off' onSubmit={handleSubmit}>
+        <TextField
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          style={{ marginBottom: 1, marginTop: 20 }}
+          label='Title'
+          variant='outlined'
+          required
+          fullWidth
+          error={titleError}
+        />
+        <TextField
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
+          style={{ marginBottom: 20, marginTop: 20 }}
+          label='Details'
+          variant='outlined'
+          multiline
+          rows={4}
+          required
+          fullWidth
+          error={detailsError}
+        />
+        <Button type='submit' color='primary' variant='contained' endIcon={<SendOutlinedIcon />}>
+          Submit
+        </Button>
+      </form>
     </Container>
   );
-}
+};
+
+export default Create;
