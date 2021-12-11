@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  Grid,
-  Paper,
-  Container,
-  Typography,
-  Card,
-  CardHeader,
-  CardContent,
-  IconButton,
-} from '@mui/material';
+import { Typography, Card, CardHeader, CardContent, IconButton } from '@mui/material';
 import { DeleteOutlined } from '@mui/icons-material';
 
 const NoteCard = ({ note, handleDelete }) => {

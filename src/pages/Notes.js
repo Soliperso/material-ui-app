@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import NoteCard from '../components/NoteCard';
-import { Grid, Paper, Container, Card, CardHeader, CardContent } from '@mui/material';
+import { Grid, Container } from '@mui/material';
 
 const Notes = () => {
   const [notes, setNotes] = useState([]);
