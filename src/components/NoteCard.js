@@ -1,25 +1,34 @@
 import React from 'react';
-import { Typography, Card, CardHeader, CardContent, IconButton } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Card, CardHeader, CardContent, Typography, Avatar, IconButton } from '@mui/material';
 import { DeleteOutlined } from '@mui/icons-material';
+import { makeStyles } from '@mui/styles';
+import { yellow, green, pink, blue } from '@mui/material/colors';
 
 const useStyles = makeStyles({
-  test: {
-    border: (note) => {
+  avatar: {
+    backgroundColor: (note) => {
       if (note.category == 'work') {
-        return '3px solid blue';
+        return yellow[700];
       }
+      if (note.category == 'money') {
+        return green[500];
+      }
+      if (note.category == 'todos') {
+        return pink[500];
+      }
+      return blue[500];
     },
   },
 });
 
-const NoteCard = ({ note, handleDelete }) => {
+export default function NoteCard({ note, handleDelete }) {
   const classes = useStyles(note);
 
   return (
     <div>
-      <Card elevation={1} className={classes.test}>
+      <Card elevation={1}>
         <CardHeader
+          avatar={<Avatar className={classes.avatar}>{note.category[0].toUpperCase()}</Avatar>}
           action={
             <IconButton onClick={() => handleDelete(note.id)}>
               <DeleteOutlined />
@@ -36,6 +45,4 @@ const NoteCard = ({ note, handleDelete }) => {
       </Card>
     </div>
   );
-};
-
-export default NoteCard;
+}

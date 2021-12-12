@@ -1,5 +1,4 @@
 import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
 import { makeStyles } from '@mui/styles';
 import {
   Drawer,
@@ -10,9 +9,11 @@ import {
   ListItemText,
   AppBar,
   Toolbar,
+  Avatar,
 } from '@mui/material';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { AddCircleOutlineOutlined, SubjectOutlined } from '@mui/icons-material';
-import { spacing } from '@mui/system';
+import { format } from 'date-fns';
 
 const drawerWidth = 240;
 
@@ -21,8 +22,10 @@ const useStyles = makeStyles((theme) => {
     page: {
       background: '#f9f9f9',
       width: '100%',
-      height: '100vh',
       padding: theme.spacing(3),
+    },
+    root: {
+      display: 'flex',
     },
     drawer: {
       width: drawerWidth,
@@ -30,23 +33,27 @@ const useStyles = makeStyles((theme) => {
     drawerPaper: {
       width: drawerWidth,
     },
-    root: {
-      display: 'flex',
-    },
     active: {
-      backgroundColor: '#f4f4f4',
+      background: '#f4f4f4',
     },
     title: {
-      padding: spacing(2),
+      padding: theme.spacing(2),
     },
-    appbar: {
-      width: `calc(100% - ${drawerWidth}px)`,
+    appBar: {
+      width: `calc(100% - ${drawerWidth}px)` + '!important',
+      marginLeft: drawerWidth,
+    },
+    date: {
+      flexGrow: 1,
     },
     toolbar: theme.mixins.toolbar,
+    avatar: {
+      marginLeft: theme.spacing(2),
+    },
   };
 });
 
-const Layout = ({ children }) => {
+export default function Layout({ children }) {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
@@ -54,40 +61,55 @@ const Layout = ({ children }) => {
   const menuItems = [
     {
       text: 'My Notes',
-      icon: <SubjectOutlined />,
+      icon: <SubjectOutlined color='secondary' />,
       path: '/',
     },
     {
       text: 'Create Note',
-      icon: <AddCircleOutlineOutlined />,
+      icon: <AddCircleOutlineOutlined color='secondary' />,
       path: '/create',
     },
   ];
 
   return (
     <div className={classes.root}>
-      <AppBar className={classes.appbar}>
+      {/* app bar */}
+      <AppBar
+        position='fixed'
+        className={classes.appBar}
+        elevation={0}
+        style={{ backgroundColor: '#f3f3f3' }}
+      >
         <Toolbar>
-          <Typography>Welcome to Ed's Notes</Typography>
+          <Typography className={classes.date}>
+            Today is the {format(new Date(), 'do MMMM Y')}
+          </Typography>
+          <Typography>Ed Chebli</Typography>
+          <Avatar className={classes.avatar} src='/mario-av.png' />
         </Toolbar>
       </AppBar>
-      <Drawer
-        variant='permanent'
-        className={classes.drawer}
-        anchor='left'
-        classes={{ paper: classes.drawerPaper }}
-      >
-        <Typography variant='h6' className={classes.title}>
-          Ed's Notes
-        </Typography>
 
+      {/* side drawer */}
+      <Drawer
+        className={classes.drawer}
+        variant='permanent'
+        classes={{ paper: classes.drawerPaper }}
+        anchor='left'
+      >
+        <div>
+          <Typography variant='h5' className={classes.title}>
+            Ed's Notes
+          </Typography>
+        </div>
+
+        {/* links/list section */}
         <List>
           {menuItems.map((item) => (
             <ListItem
-              key={item.text}
               button
+              key={item.text}
               onClick={() => navigate(item.path)}
-              className={location.pathname === item.path ? classes.active : null}
+              className={location.pathname == item.path ? classes.active : null}
             >
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
@@ -95,10 +117,12 @@ const Layout = ({ children }) => {
           ))}
         </List>
       </Drawer>
-      <div className={classes.toolbar}></div>
-      <div className={classes.page}>{children}</div>
+
+      {/* main content */}
+      <div className={classes.page}>
+        <div className={classes.toolbar}></div>
+        {children}
+      </div>
     </div>
   );
-};
-
-export default Layout;
+}

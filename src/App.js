@@ -1,34 +1,39 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Notes from './pages/Notes';
 import Create from './pages/Create';
-import { createTheme, ThemeProvider } from '@mui/material';
 import Layout from './components/Layout';
+import { createTheme, ThemeProvider } from '@mui/material';
+import { purple } from '@mui/material/colors';
 
-// Create a theme instance.
-const theme = {
+const theme = createTheme({
   palette: {
     primary: {
-      main: '#01579b',
+      main: '#f9f9f9',
     },
-    secondary: {
-      main: '#0288d1',
-    },
+    secondary: purple,
   },
-};
+  Typography: {
+    fontFamily: 'Quicksand',
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
+    fontWeightBold: 700,
+  },
+});
 
-function App() {
+const App = () => {
   return (
     <Router>
-      <ThemeProvider theme={createTheme(theme)}>
+      <ThemeProvider theme={theme}>
         <Layout>
           <Routes>
             <Route path='/' element={<Notes />} />
             <Route path='/create' element={<Create />} />
           </Routes>
-        </Layout>{' '}
+        </Layout>
       </ThemeProvider>
     </Router>
   );
-}
+};
 
 export default App;
